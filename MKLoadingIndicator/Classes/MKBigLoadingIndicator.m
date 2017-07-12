@@ -10,9 +10,6 @@
 
 #import "MKBigLoadingIndicator.h"
 
-#import "MKLog.h"
-#import "UIView+MKCommons.h"
-
 static NSString *const CounterLock = @"CounterLock";
 static NSString *const ViewLock    = @"ViewLock";
 static NSString *const TextLock    = @"TextLock";
@@ -45,33 +42,21 @@ static NSString   *_indicatorText    = @"Loading";
 //============================================================
 @implementation MKBigLoadingIndicator
 
-/*
- * (Inherited Comment)
- */
 - (instancetype)init
 {
     return [self initWithText:nil timeout:0];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (instancetype)initWithText:(NSString *)text
 {
     return [self initWithText:text timeout:0];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout
 {
     return [self initWithText:nil timeout:0];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (instancetype)initWithText:(NSString *)text timeout:(NSTimeInterval)timeout
 {
     self = [super init];
@@ -88,18 +73,11 @@ static NSString   *_indicatorText    = @"Loading";
     return self;
 }
 
-/*
- * (Inherited Comment)
- */
 - (void)dealloc
 {
-    MKLogDebug(@"dealloc");
     [self loadingDidFinish];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (void)loadingDidFinish
 {
     @synchronized(self) {
@@ -115,35 +93,24 @@ static NSString   *_indicatorText    = @"Loading";
 //=== Private Implementation ===//
 #pragma mark - Private Implementation
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)increaseCounter
 {
     @synchronized(CounterLock) {
         _counter++;
-        MKLogDebug(@"Counter was increased to %lu", (unsigned long)_counter);
         [MKBigLoadingIndicator updateLoadingIndicator];
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)decreaseCounter
 {
     @synchronized(CounterLock) {
         if (_counter > 0) {
             _counter--;
-            MKLogDebug(@"Counter was decreased to %lu", (unsigned long)_counter);
             [MKBigLoadingIndicator updateLoadingIndicator];
         }
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)updateLoadingIndicator
 {
     if (_counter > 0) {
@@ -153,19 +120,14 @@ static NSString   *_indicatorText    = @"Loading";
     }
 }
 
-/**
-* // DOCU: this method comment needs be updated.
-*/
 + (void)bigNetworkActivityIndicatorVisible:(BOOL)isVisible
 {
-#ifndef MKCOMMONS_APP_EXTENSIONS
     @synchronized(ViewLock) {
         UIView *const rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
 
         if (isVisible && _bigIndicatorView != nil) {
             [rootView bringSubviewToFront:_bigIndicatorView];
         } else if (isVisible && _bigIndicatorView == nil) {
-            MKLogDebug(@"Creating big indicator view...");
             // Setup Frame
             CGFloat const viewWidth      = 100;
             CGFloat const viewHeight     = 100;
@@ -195,9 +157,25 @@ static NSString   *_indicatorText    = @"Loading";
             [indicatorView startAnimating];
             [rootView addSubview:_bigIndicatorView];
             // Set height & width and stay center when rotating
-            [_bigIndicatorView addConstraintsToCenterWithinParentView:rootView];
-            [_bigIndicatorView addConstraintsToFixWidth:viewWidth height:viewHeight
-                                             parentView:rootView];
+            [_bigIndicatorView setTranslatesAutoresizingMaskIntoConstraints:NO];
+            [rootView addConstraint:[NSLayoutConstraint constraintWithItem:_bigIndicatorView
+                                                                 attribute:NSLayoutAttributeCenterX
+                                                                 relatedBy:NSLayoutRelationEqual toItem:rootView
+                                                                 attribute:NSLayoutAttributeCenterX multiplier:1.0
+                                                                  constant:0]];
+            [rootView addConstraint:[NSLayoutConstraint constraintWithItem:_bigIndicatorView
+                                                                 attribute:NSLayoutAttributeCenterY
+                                                                 relatedBy:NSLayoutRelationEqual toItem:rootView
+                                                                 attribute:NSLayoutAttributeCenterY multiplier:1.0
+                                                                  constant:0]];
+            [rootView addConstraint:[NSLayoutConstraint constraintWithItem:_bigIndicatorView attribute:NSLayoutAttributeWidth
+                                                                  relatedBy:NSLayoutRelationEqual toItem:nil
+                                                                  attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0
+                                                                   constant:viewWidth]];
+            [rootView addConstraint:[NSLayoutConstraint constraintWithItem:_bigIndicatorView attribute:NSLayoutAttributeHeight
+                                                                   relatedBy:NSLayoutRelationEqual toItem:nil
+                                                                   attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0
+                                                                    constant:viewHeight]];
 
             [rootView bringSubviewToFront:_bigIndicatorView];
         } else if (_bigIndicatorView != nil) {
@@ -205,12 +183,8 @@ static NSString   *_indicatorText    = @"Loading";
             _bigIndicatorView = nil;
         }
     }
-#endif
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)setIndicatorText:(NSString *)text
 {
     @synchronized(TextLock) {
@@ -220,9 +194,6 @@ static NSString   *_indicatorText    = @"Loading";
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (NSString *)indicatorText
 {
     @synchronized(TextLock) {
@@ -230,12 +201,8 @@ static NSString   *_indicatorText    = @"Loading";
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (void)timeoutTimerEvent:(id)sender
 {
-    MKLogDebug(@"Timeout has been reached.");
     [self loadingDidFinish];
 }
 

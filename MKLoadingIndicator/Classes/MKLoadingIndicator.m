@@ -8,8 +8,6 @@
 
 #import "MKLoadingIndicator.h"
 
-#import "MKLog.h"
-
 static NSString *const CounterLock = @"CounterLock";
 
 static NSUInteger _counter = 0;
@@ -35,17 +33,11 @@ static NSUInteger _counter = 0;
 //============================================================
 @implementation MKLoadingIndicator
 
-/*
- * (Inherited Comment)
- */
 - (instancetype)init
 {
     return [self initWithTimeout:0];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (instancetype)initWithTimeout:(NSTimeInterval)timeout;
 {
     self = [super init];
@@ -61,18 +53,11 @@ static NSUInteger _counter = 0;
     return self;
 }
 
-/*
- * (Inherited Comment)
- */
 - (void)dealloc
 {
-    MKLogDebug(@"dealloc");
     [self loadingDidFinish];
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (void)loadingDidFinish
 {
     @synchronized(self) {
@@ -88,52 +73,35 @@ static NSUInteger _counter = 0;
 //=== Private Implementation ===//
 #pragma mark - Private Implementation
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)increaseCounter
 {
     @synchronized(CounterLock) {
         _counter++;
-        MKLogDebug(@"Counter was increased to %lu", (unsigned long)_counter);
         [MKLoadingIndicator updateLoadingIndicator];
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)decreaseCounter
 {
     @synchronized(CounterLock) {
         if (_counter > 0) {
             _counter--;
-            MKLogDebug(@"Counter was decreased to %lu", (unsigned long)_counter);
             [MKLoadingIndicator updateLoadingIndicator];
         }
     }
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 + (void)updateLoadingIndicator
 {
-#ifndef MKCOMMONS_APP_EXTENSIONS
     if (_counter > 0) {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     } else {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     }
-#endif
 }
 
-/**
- * // DOCU: this method comment needs be updated.
- */
 - (void)timeoutTimerEvent:(id)sender
 {
-    MKLogDebug(@"Timeout has been reached.");
     [self loadingDidFinish];
 }
 
