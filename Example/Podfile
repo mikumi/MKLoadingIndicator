@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'MKLoadingIndicator_Example' do
+  pod 'MKLoadingIndicator', :path => '../'
+
+  target 'MKLoadingIndicator_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
