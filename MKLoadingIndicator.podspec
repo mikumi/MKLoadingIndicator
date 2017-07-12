@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'MKLoadingIndicator'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of MKLoadingIndicator.'
+  s.summary          = 'Quick and easy traditional loading indicator'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,8 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+Quick and easy traditional loading indicator, either full screen or as an
+overlay
                        DESC
 
   s.homepage         = 'https://github.com/mikumi/MKLoadingIndicator'
