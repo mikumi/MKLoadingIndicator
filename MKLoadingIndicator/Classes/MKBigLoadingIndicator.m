@@ -123,7 +123,7 @@ static NSString   *_indicatorText    = @"Loading";
 + (void)bigNetworkActivityIndicatorVisible:(BOOL)isVisible
 {
     @synchronized(ViewLock) {
-        UIView *const rootView = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+        UIView *const rootView = [UIApplication sharedApplication].keyWindow;
 
         if (isVisible && _bigIndicatorView != nil) {
             [rootView bringSubviewToFront:_bigIndicatorView];
